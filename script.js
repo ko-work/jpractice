@@ -21,17 +21,16 @@ function getRandomValues(size, n) {
 }
 
 function displayWord() {
-  document.getElementById("panic_img").src = "img/monkey1.jpg";
-
   const optionsDiv = document.getElementById("options");
   optionsDiv.innerHTML = "";
   console.log("currentMistakeNum: " + currentMistakeNum);
+
   if (currentMistakeNum > 5){
     document.getElementById("word-display").textContent = "censored";
 
-    const button = document.createElement("button");
-    button.textContent = "Restart";
-    button.onclick = () => restart();
+    const button = document.createElement("span");
+    button.textContent = "bazdmeg";
+    button.style = 
     optionsDiv.appendChild(button);
 
   } else {
@@ -65,9 +64,11 @@ function getCurrentImage(numOfMistakes){
 }
 
 function checkAnswer(selected) {
-  const currentIdx = indices[currentWordIndex];
+  console.log("Check Answer");
 
+  const currentIdx = indices[currentWordIndex];
   const feedback = document.getElementById("feedback");
+
   console.log(words[currentIdx].english + "  --  " + selected);
   if (selected === words[currentIdx].english) {
     feedback.textContent = "Correct!";
@@ -80,26 +81,14 @@ function checkAnswer(selected) {
     document.getElementById("panic_img").src = getCurrentImage(currentMistakeNum);
     currentMistakeNum++;
   }
+  console.log("document.getElementById(\"panic_img\").src: ", document.getElementById("panic_img").src);
   if (currentMistakeNum >= 5){
-    
-    document.getElementsByClassName('game-over-container')[0].style.display = 'block';
     document.getElementsByClassName('game-container')[0].style.display = 'none';
-
   }
-}
 
-function nextWord() {
   currentWordIndex = (currentWordIndex + 1) % words.length;
   displayWord();
   document.getElementById("feedback").textContent = "";
-}
-
-function restart(){
-  currentWordIndex = 0;
-  currentMistakeNum = 0;
-  score = 0;
-  shuffle(indices);
-  startGame();
 }
 
 // Fisher-Yates shuffle
@@ -111,15 +100,18 @@ function shuffle(array) {
   return array;
 }
 
-// Start the game
 function startGame(){
-  console.log("bazdmeg?");
+  console.log("Start Game");
+  currentMistakeNum = 0;
+  currentWordIndex = 0;  
+  score = 0;
 
+  document.getElementById("score").textContent = score;
   document.getElementsByClassName('game-container')[0].style.display = 'block';
-  document.getElementsByClassName('main-container')[0].style.display = 'none';
-
-  displayWord();
+  document.getElementById("panic_img").src = "img/monkey1.jpg";
   
+  shuffle(indices);
+  displayWord();
 }
 
 
