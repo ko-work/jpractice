@@ -54,6 +54,7 @@ function displayWord() {
     shuffledOptions.forEach(option => {
       const button = document.createElement("button");
       button.textContent = option;
+      button.className = "answer";
       button.onclick = () => checkAnswer(option, button);
       optionsDiv.appendChild(button);
     });
@@ -76,11 +77,21 @@ function nextWord(){
 }
 
 function checkAnswer(selected, button) {
-  console.log("Check Answer" + selected);
-  console.log(typeof button);
+  console.log("Check Answer: " + selected);  
+  answers = document.getElementsByClassName("answer");
+  const currentIdx = indices[currentWordIndex];
+
+  let goodAnswerBtn;
+  Array.prototype.forEach.call(answers, element => {
+    console.log("answer text: " + element.textContent);
+    if (element.textContent == words[currentIdx].english){
+      console.log("---- answer text: " + element.textContent);
+      goodAnswerBtn = element;
+    }
+  });
 
   if (!isSelected){   
-    const currentIdx = indices[currentWordIndex];
+    
 
     if (selected === words[currentIdx].english) {
       button.style.backgroundColor = "#009f4a";
@@ -92,6 +103,7 @@ function checkAnswer(selected, button) {
       button.style.color = "white";
       document.getElementById("panic_img").src = getCurrentImage(currentMistakeNum);
       currentMistakeNum++;
+      goodAnswerBtn.style.border = "thick solid #009f4a";
     }
   }
   isSelected = true;
