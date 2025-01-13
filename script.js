@@ -2,6 +2,7 @@
 let currentWordIndex = 0;
 let score = 0;
 let currentMistakeNum = 0;
+let isSelected = false;
 const indices = Array.from({ length: words.length }, (_, i) => i);
 shuffle(indices);
 
@@ -53,7 +54,7 @@ function displayWord() {
     shuffledOptions.forEach(option => {
       const button = document.createElement("button");
       button.textContent = option;
-      button.onclick = () => checkAnswer(option);
+      button.onclick = () => checkAnswer(option, button);
       optionsDiv.appendChild(button);
     });
   }
@@ -63,32 +64,37 @@ function getCurrentImage(numOfMistakes){
   return "img/" + numOfMistakes + ".jpg";
 }
 
-function checkAnswer(selected) {
-  console.log("Check Answer");
-
-  const currentIdx = indices[currentWordIndex];
-  const feedback = document.getElementById("feedback");
-
-  console.log(words[currentIdx].english + "  --  " + selected);
-  if (selected === words[currentIdx].english) {
-    feedback.textContent = "Correct!";
-    feedback.style.color = "green";
-    score++;
-    document.getElementById("score").textContent = score;
-  } else {
-    feedback.textContent = "Wrong!";
-    feedback.style.color = "red";
-    document.getElementById("panic_img").src = getCurrentImage(currentMistakeNum);
-    currentMistakeNum++;
-  }
-  console.log("document.getElementById(\"panic_img\").src: ", document.getElementById("panic_img").src);
+function nextWord(){
+  isSelected = false;
   if (currentMistakeNum >= 5){
     document.getElementsByClassName('game-container')[0].style.display = 'none';
+  } else {
+    // Next word
+    currentWordIndex = (currentWordIndex + 1) % words.length;
+    displayWord();
   }
+}
 
-  currentWordIndex = (currentWordIndex + 1) % words.length;
-  displayWord();
-  document.getElementById("feedback").textContent = "";
+function checkAnswer(selected, button) {
+  console.log("Check Answer" + selected);
+  console.log(typeof button);
+
+  if (!isSelected){   
+    const currentIdx = indices[currentWordIndex];
+
+    if (selected === words[currentIdx].english) {
+      button.style.backgroundColor = "#009f4a";
+      button.style.color = "white";
+      score++;
+      document.getElementById("score").textContent = score;
+    } else {
+      button.style.backgroundColor = "rgb(159, 0, 0)";
+      button.style.color = "white";
+      document.getElementById("panic_img").src = getCurrentImage(currentMistakeNum);
+      currentMistakeNum++;
+    }
+  }
+  isSelected = true;
 }
 
 // Fisher-Yates shuffle
@@ -105,14 +111,14 @@ function startGame(){
   currentMistakeNum = 0;
   currentWordIndex = 0;  
   score = 0;
+  isSelected = false;
 
   document.getElementById("score").textContent = score;
   document.getElementsByClassName('game-container')[0].style.display = 'block';
   document.getElementById("panic_img").src = "img/monkey1.jpg";
-  
+
   shuffle(indices);
   displayWord();
+  const nextButton = document.getElementById("next");
+  nextButton.onclick = () => nextWord();
 }
-
-
-  
